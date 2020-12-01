@@ -18,7 +18,7 @@ public class ModelPanel : MonoBehaviour
     TextMeshProUGUI nameText, descriptionText, creatorText, dateText;
 
     [SerializeField]
-    DateTime lastUsedDate;
+    public DateTime lastUsedDate;
 
     [SerializeField]
     float daysFromToday;

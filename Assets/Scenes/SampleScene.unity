@@ -2217,7 +2217,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -7.299988, y: -45}
+  m_AnchoredPosition: {x: -7.300049, y: -45}
   m_SizeDelta: {x: -21.924438, y: -110.51343}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1267460853
@@ -2677,7 +2677,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1398551548}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1050726595}
+        m_MethodName: NewOld
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1398551548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3215,7 +3226,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1606305415}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1050726595}
+        m_MethodName: OldNew
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1606305415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5123,6 +5145,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 221982990330124229, guid: 2990e845e83b55449ad85f8774a800d8,
+        type: 3}
+      propertyPath: m_text
+      value: The Quick Brown Fox Jumped Over The Lazy Dog
+      objectReference: {fileID: 0}
     - target: {fileID: 221982990350416641, guid: 2990e845e83b55449ad85f8774a800d8,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -5332,6 +5359,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 976279015727947833, guid: 2990e845e83b55449ad85f8774a800d8,
+        type: 3}
+      propertyPath: name
+      value: The Quick Brown Fox Jumped Over The Lazy Dog
+      objectReference: {fileID: 0}
+    - target: {fileID: 976279015727947833, guid: 2990e845e83b55449ad85f8774a800d8,
+        type: 3}
+      propertyPath: description
+      value: This is a Chassis
+      objectReference: {fileID: 0}
+    - target: {fileID: 1920860119172234026, guid: 2990e845e83b55449ad85f8774a800d8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800229552426283802, guid: 2990e845e83b55449ad85f8774a800d8,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2990e845e83b55449ad85f8774a800d8, type: 3}

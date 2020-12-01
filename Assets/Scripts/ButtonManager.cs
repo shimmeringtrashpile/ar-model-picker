@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -82,21 +83,21 @@ public class ButtonManager : MonoBehaviour
     public void NewOld()
     {
         ModelPanel[] panelArray = FindObjectsOfType<ModelPanel>();
-        List<string> modelPanelList = new List<string>();
+        List<DateTime> modelPanelList = new List<DateTime>();
         foreach (ModelPanel item in panelArray)
         {
-            modelPanelList.Add(item.name);
+            modelPanelList.Add(item.lastUsedDate);
         }
         modelPanelList.Sort();
         int position = modelPanelList.Count - 1;
-        foreach (string item in modelPanelList)
+        foreach (DateTime item in modelPanelList)
         {
             print(item);
             foreach (ModelPanel panelItem in panelArray)
             {
-                if (panelItem.name == item)
+                if (panelItem.lastUsedDate == item)
                 {
-                    print(panelItem.name + " " + item + " " + position);
+                    print(panelItem.lastUsedDate + " " + item + " " + position);
                     panelItem.transform.SetSiblingIndex(position);
                 }
             }
@@ -106,7 +107,27 @@ public class ButtonManager : MonoBehaviour
 
     public void OldNew()
     {
-
+        ModelPanel[] panelArray = FindObjectsOfType<ModelPanel>();
+        List<DateTime> modelPanelList = new List<DateTime>();
+        foreach (ModelPanel item in panelArray)
+        {
+            modelPanelList.Add(item.lastUsedDate);
+        }
+        modelPanelList.Sort();
+        int position = 0;
+        foreach (DateTime item in modelPanelList)
+        {
+            print(item);
+            foreach (ModelPanel panelItem in panelArray)
+            {
+                if (panelItem.lastUsedDate == item)
+                {
+                    print(panelItem.lastUsedDate + " " + item + " " + position);
+                    panelItem.transform.SetSiblingIndex(position);
+                }
+            }
+            position++;
+        }
     }
 
 }
