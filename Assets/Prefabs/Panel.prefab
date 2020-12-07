@@ -149,6 +149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47678b49181ec0d48ade3b2023a604b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxChars: 20
+  slider: 0
 --- !u!61 &8634439060676869004
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -541,7 +543,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   name: Chassis
-  description: Thsi is a Chassis
+  description: This is a Chassis
   creator: Ben Franklin
   date: 
   icon: {fileID: 0}
@@ -831,6 +833,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47678b49181ec0d48ade3b2023a604b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxChars: 20
+  slider: 0
 --- !u!1 &221982992056949568
 GameObject:
   m_ObjectHideFlags: 0
