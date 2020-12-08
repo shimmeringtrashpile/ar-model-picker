@@ -22,9 +22,15 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     float defaultWidth;
     float defaultLocation;
     float currentWidth;
-    float currentLocation;
+
+    [SerializeField]
+    float sliderSpeed = 5;
+
     float timesMoved = 0;
     bool canMove = true;
+
+    [SerializeField]
+    Transform image;
 
 
 
@@ -40,6 +46,12 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         defaultLocation = text.rectTransform.rect.x;
         print(defaultWidth);
         print(defaultLocation);
+        currentWidth = text.rectTransform.rect.width;
+
+        if (text.text.Length <= maxChars)
+        {
+            maxChars = text.text.Length;
+        } 
     }
 
     // Update is called once per frame
@@ -94,19 +106,25 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             {
                 if (canMove)
                 {
-                    currentWidth = text.rectTransform.rect.width;
                     canMove = false;
                     StartCoroutine(DelayToMoving());
-                    this.transform.position = new Vector3(this.transform.position.x - 5, this.transform.position.y, this.transform.position.z);
-                    currentLocation = this.transform.position.x;
-                    text.rectTransform.sizeDelta = new Vector2(currentWidth + 5, 50);
-                    currentWidth = text.rectTransform.rect.width;
+                    if (this.transform.position.x - sliderSpeed >=image.position.x)
+                    {
+                        this.transform.position = new Vector3(this.transform.position.x - sliderSpeed, this.transform.position.y, this.transform.position.z);
+                        text.rectTransform.sizeDelta = new Vector2(currentWidth + sliderSpeed, 50);
+                        currentWidth = text.rectTransform.rect.width;
+                    }
+
+
 
                 }
             } else
             {
-                this.transform.position = new Vector3(this.transform.position.x + (timesMoved * 5), this.transform.position.y, this.transform.position.z);
-                text.rectTransform.sizeDelta = new Vector2(currentWidth - (timesMoved * 5), 50);
+                // currentLocation = 0;
+                currentWidth = defaultWidth;
+                StopCoroutine(DelayToMoving());
+                this.transform.position = new Vector3(this.transform.position.x + (timesMoved * sliderSpeed), this.transform.position.y, this.transform.position.z);
+                text.rectTransform.sizeDelta = new Vector2(defaultWidth, 50);
                 timesMoved = 0;
             }
 

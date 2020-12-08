@@ -151,6 +151,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxChars: 20
   slider: 0
+  sliderSpeed: 5
+  image: {fileID: 0}
 --- !u!61 &8634439060676869004
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -835,6 +837,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxChars: 20
   slider: 0
+  sliderSpeed: 5
+  image: {fileID: 0}
 --- !u!1 &221982992056949568
 GameObject:
   m_ObjectHideFlags: 0
