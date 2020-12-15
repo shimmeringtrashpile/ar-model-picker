@@ -57,8 +57,13 @@ public class ModelPanel : MonoBehaviour
         
     }
 
+    // This string function will return a string. Notice the return.
+    // Int is the type of variable for day
     string GetDaySuffix(int day)
     {
+        int test = 5;
+        float test1 = 2;
+        test = Int32.Parse(test1.ToString());
         switch (day)
         {
             case 1:

@@ -6,11 +6,16 @@ using UnityEngine.EventSystems;
 
 public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    TextMeshProUGUI text;
+    TextMeshProUGUI textBox;
     char[] textArray;
     int currentPosition;
+
+    // Makes visibile in inspector. 
+    // This is the prefered way to do this. Don't just make it public. 
     [SerializeField]
     float maxChars = 20;
+
+    // List is the type. Char is the type of data in the list.
     List<char> current = new List<char>();
     string defaultText;
     bool isHovering = false;
@@ -19,10 +24,11 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     [SerializeField]
     bool slider = false;
 
+    // Begin variables for sliding mechanism approach.
     float defaultWidth;
     float defaultLocation;
     float currentWidth;
-
+ 
     [SerializeField]
     float sliderSpeed = 5;
 
@@ -32,40 +38,50 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     [SerializeField]
     Transform image;
 
+    float changePosition = 1;
+    float localChangedTextNumber = 0;
+    bool canDelete = false;
+    bool isDeleteCoroutineRunning = false;
 
 
 
     // Start is called before the first frame update
     void Start()
     {
-        text = GetComponent<TextMeshProUGUI>();
-        defaultText = text.text;
-        textArray = text.text.ToCharArray();
+        textBox = GetComponent<TextMeshProUGUI>();
+        defaultText = textBox.text;
+        textArray = textBox.text.ToCharArray();
 
-        defaultWidth = text.rectTransform.rect.width;
-        defaultLocation = text.rectTransform.rect.x;
+        defaultWidth = textBox.rectTransform.rect.width;
+        defaultLocation = textBox.rectTransform.rect.x;
         print(defaultWidth);
         print(defaultLocation);
-        currentWidth = text.rectTransform.rect.width;
+        currentWidth = textBox.rectTransform.rect.width;
 
-        if (text.text.Length <= maxChars)
+        if (textBox.text.Length <= maxChars)
         {
-            maxChars = text.text.Length;
+            maxChars = textBox.text.Length;
         } 
     }
 
     // Update is called once per frame
     void Update()
     {
+        print("sliderSpeed:" + " " + sliderSpeed);
+        print("timesMoved:" + " " + timesMoved);
+
         if (slider == false)
         {
 
             if (isHovering)
             {
+                // This first approach removes the front letter.
                 if (canChange)
                 {
-                    text.text = "";
+                    textBox.text = "";
                     canChange = false;
+                    // Coroutines are kinda like async in Javascript.
+                    // Recharge-style approach.
                     StartCoroutine(DelayToChangingNumber());
                     print("the mouse is hovering");
                     for (int i = currentPosition; i < maxChars + currentPosition; i++)
@@ -74,15 +90,12 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                         {
                             if (i >= textArray.Length)
                             {
-                                //int local = i - textArray.Length;
-                                //current.Add(textArray[local]);
-                                //text.text += textArray[local];
                             }
                             else
                             {
                                 print(i + " " + textArray.Length);
                                 current.Add(textArray[i]);
-                                text.text += textArray[i];
+                                textBox.text += textArray[i];
                             }
                         }
                     }
@@ -97,58 +110,75 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             else
             {
                 StopCoroutine(DelayToChangingNumber());
-                text.text = defaultText;
+                textBox.text = defaultText;
                 currentPosition = 0;
             }
         } else 
         {
+           /* This second approach moves the box to the left and 
+              subtracts chars from the beginning of the string.
+              We also make the box size smaller.
+            */
            if (isHovering)
             {
                 if (canMove)
                 {
                     canMove = false;
                     StartCoroutine(DelayToMoving());
-                    if (this.transform.position.x - sliderSpeed >=image.position.x)
+                    if (textBox.text.Length > maxChars)
                     {
-                        this.transform.position = new Vector3(this.transform.position.x - sliderSpeed, this.transform.position.y, this.transform.position.z);
-                        text.rectTransform.sizeDelta = new Vector2(currentWidth + sliderSpeed, 50);
-                        currentWidth = text.rectTransform.rect.width;
+                        if (this.transform.position.x - sliderSpeed >= image.position.x)
+                        {
+                            // Move the line.
+                            this.transform.position = new Vector3(this.transform.position.x - sliderSpeed, this.transform.position.y, this.transform.position.z);
+                            // Resize the box.
+                            textBox.rectTransform.sizeDelta = new Vector2(currentWidth + sliderSpeed, 50);
+                            currentWidth = textBox.rectTransform.rect.width;
+                            localChangedTextNumber += sliderSpeed;
+                        }
                     }
 
+                    if (localChangedTextNumber > changePosition)
+                    {
+                        if (isDeleteCoroutineRunning == false)
+                        {
+                            isDeleteCoroutineRunning = true;
+                            StartCoroutine(DelayToDeletingLetter());
+                        }
 
+
+                    }
 
                 }
             } else
             {
-                // currentLocation = 0;
                 currentWidth = defaultWidth;
                 StopCoroutine(DelayToMoving());
+                StopCoroutine(DelayToDeletingLetter());
+                canDelete = false;
+                isDeleteCoroutineRunning = false;
+                // Put the line back.
                 this.transform.position = new Vector3(this.transform.position.x + (timesMoved * sliderSpeed), this.transform.position.y, this.transform.position.z);
-                text.rectTransform.sizeDelta = new Vector2(defaultWidth, 50);
+                textBox.rectTransform.sizeDelta = new Vector2(defaultWidth, 50);
                 timesMoved = 0;
+                textBox.text = defaultText;
             }
 
         }
 
-    }
-
-    private void OnMouseOver()
-    {
-        print("the mouse is hovering");
-        for (int i = currentPosition; i < maxChars + currentPosition; i++)
+        if (canDelete)
         {
-            current.Add(textArray[i]);
+            canDelete = false;
+            StartCoroutine(DelayToDeletingLetter());
+            if (textBox.text.Length > maxChars) 
+            {
+                textBox.text = textBox.text.Remove(0, 1);
+                localChangedTextNumber = 0;
+            }
         }
-        print(current.ToString());
-        currentPosition++;
-        current.Clear();
     }
 
-    private void OnMouseExit()
-    {
-        text.text = defaultText;
-    }
-
+    // OnPointers are Unity functions. This must have a button. Requires IPointerEnterHandler and IPointerExitHandler at the top.
     public void OnPointerEnter(PointerEventData eventData)
     {
         isHovering = true;
@@ -161,6 +191,7 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     IEnumerator DelayToChangingNumber()
     {
+        // Ignore the return and call a new object
         yield return new WaitForSeconds(.05f);
         canChange = true;
     }
@@ -168,7 +199,16 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     IEnumerator DelayToMoving()
     {
         yield return new WaitForSeconds(.05f);
+        if (textBox.text.Length > maxChars) 
+        { 
+            timesMoved += 1;
+        }
         canMove = true;
-        timesMoved += 1;
+    }
+
+    IEnumerator DelayToDeletingLetter()
+    {
+        yield return new WaitForSeconds(.01f);
+        canDelete = true;
     }
 }
