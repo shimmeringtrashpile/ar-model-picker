@@ -30,7 +30,7 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     float currentWidth;
  
     [SerializeField]
-    float sliderSpeed = 5;
+    float sliderSpeed = 1;
 
     float timesMoved = 0;
     bool canMove = true;
@@ -42,6 +42,7 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     float localChangedTextNumber = 0;
     bool canDelete = false;
     bool isDeleteCoroutineRunning = false;
+    bool canHover = false;
 
 
 
@@ -67,8 +68,7 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     // Update is called once per frame
     void Update()
     {
-        print("sliderSpeed:" + " " + sliderSpeed);
-        print("timesMoved:" + " " + timesMoved);
+        isHovering = canHover;
 
         if (slider == false)
         {
@@ -132,7 +132,7 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                             // Move the line.
                             this.transform.position = new Vector3(this.transform.position.x - sliderSpeed, this.transform.position.y, this.transform.position.z);
                             // Resize the box.
-                            textBox.rectTransform.sizeDelta = new Vector2(currentWidth + sliderSpeed, 50);
+                            textBox.rectTransform.sizeDelta = new Vector2((currentWidth - 15) + sliderSpeed, 50);
                             currentWidth = textBox.rectTransform.rect.width;
                             localChangedTextNumber += sliderSpeed;
                         }
@@ -152,16 +152,7 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                 }
             } else
             {
-                currentWidth = defaultWidth;
-                StopCoroutine(DelayToMoving());
-                StopCoroutine(DelayToDeletingLetter());
-                canDelete = false;
-                isDeleteCoroutineRunning = false;
-                // Put the line back.
-                this.transform.position = new Vector3(this.transform.position.x + (timesMoved * sliderSpeed), this.transform.position.y, this.transform.position.z);
-                textBox.rectTransform.sizeDelta = new Vector2(defaultWidth, 50);
-                timesMoved = 0;
-                textBox.text = defaultText;
+                ResetPanel();
             }
 
         }
@@ -178,15 +169,36 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         }
     }
 
+    private void ResetPanel()
+    {
+        currentWidth = defaultWidth;
+        StopCoroutine(DelayToMoving());
+        StopCoroutine(DelayToDeletingLetter());
+        canDelete = false;
+        isDeleteCoroutineRunning = false;
+        // Put the line back.
+        this.transform.position = new Vector3(this.transform.position.x + (timesMoved * sliderSpeed), this.transform.position.y, this.transform.position.z);
+        textBox.rectTransform.sizeDelta = new Vector2(defaultWidth, 50);
+        timesMoved = 0;
+        textBox.text = defaultText;
+    }
+
     // OnPointers are Unity functions. This must have a button. Requires IPointerEnterHandler and IPointerExitHandler at the top.
     public void OnPointerEnter(PointerEventData eventData)
     {
-        isHovering = true;
+        // isHovering = true;
+        StartCoroutine(DelayToHovering());
+        print("OnPointerEnter");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        StopCoroutine(DelayToHovering()) ;
         isHovering = false;
+        canHover = false;
+        ResetPanel();
+        print("OnPointerExit");
+
     }
 
     IEnumerator DelayToChangingNumber()
@@ -198,17 +210,24 @@ public class HoverText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     IEnumerator DelayToMoving()
     {
+        //start sound
         yield return new WaitForSeconds(.05f);
         if (textBox.text.Length > maxChars) 
         { 
             timesMoved += 1;
         }
         canMove = true;
+        //stop sound
     }
 
     IEnumerator DelayToDeletingLetter()
     {
         yield return new WaitForSeconds(.01f);
         canDelete = true;
+    }    
+    IEnumerator DelayToHovering()
+    {
+        yield return new WaitForSeconds(.03f);
+        canHover = true;
     }
 }

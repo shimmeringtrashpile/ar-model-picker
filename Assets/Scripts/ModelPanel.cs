@@ -34,18 +34,23 @@ public class ModelPanel : MonoBehaviour
         creatorText.text = creator;
         dateText.text = System.DateTime.Now.ToString();
         if (lastUsedDate.Date == DateTime.Today)
+        // Today, just show the time.
         {
             dateText.text = System.DateTime.Now.ToString("HH:mm") + " "  + DateTime.Now.ToString("tt", CultureInfo.InvariantCulture);
         } 
         else if (lastUsedDate.Date == DateTime.Today.AddDays(-1))
+        // Yesterday's date, show Yesterday.
         {
             dateText.text = "Yesterday";
         } 
         else 
+        // Any day that is older than 1 day, get detailed.
         {
-            dateText.text = lastUsedDate.Date.ToString("MMMM") + " " + lastUsedDate.Date.ToString("dd") + GetDaySuffix(System.DateTime.DaysInMonth(lastUsedDate.Year, lastUsedDate.Month)) + ", " + lastUsedDate.Year.ToString();
-
-
+            dateText.text = lastUsedDate.Date.ToString("MMMM") + " " + 
+                            lastUsedDate.Date.ToString("dd") + 
+                            GetDaySuffix(System.DateTime.DaysInMonth(lastUsedDate.Year, lastUsedDate.Month)) + 
+                            ", " + 
+                            lastUsedDate.Year.ToString();
         }
 
 
@@ -61,9 +66,6 @@ public class ModelPanel : MonoBehaviour
     // Int is the type of variable for day
     string GetDaySuffix(int day)
     {
-        int test = 5;
-        float test1 = 2;
-        test = Int32.Parse(test1.ToString());
         switch (day)
         {
             case 1:
